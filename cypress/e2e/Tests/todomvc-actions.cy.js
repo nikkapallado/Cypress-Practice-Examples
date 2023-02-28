@@ -1,25 +1,28 @@
 /// <reference types="cypress" />
 
+import { TodoPage } from "../../page-objects/todo-page"
+
 describe(`Test TodoMVC App Actions`, () => {
+    const todoPage = new TodoPage()
+
     beforeEach(() => {
-        cy.visit(`https://todomvc.com/examples/vanillajs/`)
-        cy.get('.new-todo', {timeout: 6000}).click().type(`Clean room{enter}`)
+        todoPage.navigate()
+        todoPage.addTodo(`Clean room`)
     })
 
     it(`should add a new todo to the list`, () =>{
-        cy.get('.view > label').should(`have.text`, `Clean room`)
-        cy.get('.toggle').should(`not.be.checked`)
+        todoPage.validateTodoText(0, `Clean room`)
+        todoPage.validateCheckbox(0, `not.be.checked`)
     })
 
     it(`should mark a todo as completed`, () =>{
-        cy.get('.toggle').click()
-        cy.get('.view > label').should(`have.css`, `text-decoration-line`, `line-through`)
-        cy.get('.toggle').should(`be.checked`)  
+        todoPage.clickToggle(0)
+        todoPage.validateCheckbox(0, `be.checked`) 
     })
 
     it(`should clear completed todos`, () =>{
-        cy.get('.toggle').click() 
-        cy.contains(`Clear`).click()
-        cy.get(`.todo-list`).should(`not.have.descendants`,`li`)  
+        todoPage.clickToggle(0)
+        todoPage.clickClear()
+        todoPage.validateClear() 
     })
 })

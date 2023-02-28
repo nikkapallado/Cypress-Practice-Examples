@@ -7,9 +7,13 @@
     "cypress": "^12.7.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cypress run",
+    "cypress": "cypress open"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@applitools/eyes-cypress": "^3.29.1"
+  }
 }

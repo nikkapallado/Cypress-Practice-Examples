@@ -1,37 +1,42 @@
 /// <reference types="cypress" />
 
+import { TodoPage } from "../../page-objects/todo-page"
+
 describe(`Test TodoMVC App Filtering`, () =>{
+    const todoPage = new TodoPage()
+
     beforeEach(() => {
-        cy.visit(`https://todomvc.com/examples/vanillajs/`)
+        todoPage.navigate()
 
-        cy.get('.new-todo').click().type(`Clean room{enter}`)
-        cy.get('.new-todo').click().type(`Learn Javascript{enter}`)
-        cy.get('.new-todo').click().type(`Use Cypress{enter}`)
+        todoPage.addTodo(`Clean room`)
+        todoPage.addTodo(`Learn Javascript`)
+        todoPage.addTodo(`Use Cypress`)
 
-        cy.get('.todo-list li:nth-child(2) .toggle').click()
+        todoPage.clickToggle(1)
     })
 
     it(`should filter "Active" todos`, () => {
-        cy.contains(`Active`).click()
+        todoPage.clickActive()
 
-        cy.get('.todo-list li').should(`have.length`, 2)
-        cy.get('.todo-list li:nth-child(1)').should(`have.text`, `Clean room`)
-        cy.get('.todo-list li:nth-child(2)').should(`have.text`, `Use Cypress`)
+        todoPage.validateListLength(2)
+        
+        todoPage.validateTodoText(0,`Clean room`)
+        todoPage.validateTodoText(1,`Use Cypress`)
     })
 
     it(`should filter "Completed" todos`, () => {
-        cy.contains(`Completed`).click()
+        todoPage.clickCompleted()
 
-        cy.get('.todo-list li').should(`have.length`, 1)
-        cy.get('.todo-list li').should(`have.text`, `Learn Javascript`)
+        todoPage.validateListLength(1)
+        todoPage.validateTodoText(0,`Learn Javascript`)
     })
 
     it(`should filter "All" todos`, () => {
-        cy.contains(`All`).click()
+        todoPage.clickAll()
 
-        cy.get('.todo-list li').should(`have.length`, 3)
-        cy.get('.todo-list li:nth-child(1)').should(`have.text`, `Clean room`)
-        cy.get('.todo-list li:nth-child(2)').should(`have.text`, `Learn Javascript`)
-        cy.get('.todo-list li:nth-child(3)').should(`have.text`, `Use Cypress`)
+        todoPage.validateListLength(3)
+        todoPage.validateTodoText(0,`Clean room`)
+        todoPage.validateTodoText(1,`Learn Javascript`)
+        todoPage.validateTodoText(2,`Use Cypress`)
     })
 })
